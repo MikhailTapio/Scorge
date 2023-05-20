@@ -170,22 +170,23 @@ publishing {
     }
     repositories {
         maven {
+            name = "release"
+            url = 'https://maven.nova-committee.cn/releases'
             credentials {
-                username project.properties.forgeMavenUser?:'fake'
-                password project.properties.forgeMavenPassword?:'news'
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
             }
-            url 'http://maven.minecraftforge.net/manage/upload'
         }
     }
 }
 
-def getVersion()
-{
+def getVersion() {
     String base_number = "${mod_version}"
-    if (System.hasProperty("BUILD_NUMBER").toString())
-    {
-        return base_number + "." + System.getenv("BUILD_NUMBER").toString()
-    } else {
-        return base_number + ".${grgit.head().abbreviatedId}"
-    }
+    //if (System.hasProperty("BUILD_NUMBER").toString())
+    //{
+    //    return base_number + "." + System.getenv("BUILD_NUMBER").toString()
+    //} else {
+    //    return base_number + ".${grgit.head().abbreviatedId}"
+    //}
+    return base_number
 }

@@ -1,22 +1,22 @@
 package net.minecraftforge.scorge.lang
 
 // format: off
-import java.lang.reflect.InvocationTargetException
-import java.util
-import java.util.function.{Consumer, Supplier}
 
 import net.minecraftforge.forgespi.language.IModLanguageProvider.IModLanguageLoader
-import net.minecraftforge.forgespi.language.{IConfigurable, ILifecycleEvent, IModInfo, IModLanguageProvider, ModFileScanData}
+import net.minecraftforge.forgespi.language._
 import net.minecraftforge.scorge.lang.ScorgeModLanguageProvider.ScorgeModTarget
 import org.apache.logging.log4j.LogManager
 
+import java.lang.reflect.InvocationTargetException
+import java.util
+import java.util.function.{Consumer, Supplier}
 import scala.beans.BeanProperty
 
 object ScorgeModLanguageProvider {
 
   private val LOGGER = LogManager.getLogger("Loading")
 
-  class ScorgeModTarget(className:String, @BeanProperty modId:String) extends IModLanguageLoader {
+  class ScorgeModTarget(className: String, @BeanProperty modId: String) extends IModLanguageLoader {
     override def loadMod[T](info: IModInfo, modFileScanResults: ModFileScanData, gameLayer: ModuleLayer): T = {
       try {
         val scorgeContainer: Class[_] = Class.forName("net.minecraftforge.scorge.lang.ScorgeModContainer",
@@ -25,7 +25,7 @@ object ScorgeModLanguageProvider {
         constructor.newInstance(info, className, modFileScanResults, gameLayer).asInstanceOf[T]
       } catch {
         case e@(_: NoSuchMethodException | _: ClassNotFoundException | _: InstantiationException | _: IllegalAccessException | _: InvocationTargetException) =>
-          LOGGER.fatal("Unable to load ScorgeModContainer, wat?", e:Any)
+          LOGGER.fatal("Unable to load ScorgeModContainer, wat?", e: Any)
           throw new RuntimeException(e)
       }
     }
@@ -35,8 +35,10 @@ object ScorgeModLanguageProvider {
 }
 
 //Import for the logger
+
 import net.minecraftforge.scorge.lang.ScorgeModLanguageProvider._
-class ScorgeModLanguageProvider extends IModLanguageProvider{
+
+class ScorgeModLanguageProvider extends IModLanguageProvider {
 
   override def name(): String = "scorge"
 
@@ -60,6 +62,6 @@ class ScorgeModLanguageProvider extends IModLanguageProvider{
     scanResult.addLanguageLoader(targetMap)
   }
 
-  override def consumeLifecycleEvent[R <:ILifecycleEvent[R]](consumeEvent:Supplier[R]): Unit = {}
+  override def consumeLifecycleEvent[R <: ILifecycleEvent[R]](consumeEvent: Supplier[R]): Unit = {}
 }
 // format: on
